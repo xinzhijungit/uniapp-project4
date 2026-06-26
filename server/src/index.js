@@ -2107,8 +2107,10 @@ app.post('/api/v1/tags/:tagCode/batch-test', async (req, res) => {
         )
         existingBhList = existingKeys.map(r => r.ENTITY_KEY).filter(Boolean)
         
-        // 查询实体
-        const result = await db.query('SELECT BH, ZJHM, XM, LXDH, HJXZ, XZXZ, XB, GZDW, ZY, CPH_ontology FROM FKD_BJR LIMIT ?', [countNum * 2])
+        // 查询实体 - 查询足够多的记录以确保能找到未测试过的实体
+        // 如果已有示例数量较多，查询更多记录
+        const queryLimit = Math.max(countNum * 2, existingBhList.length + countNum)
+        const result = await db.query('SELECT BH, ZJHM, XM, LXDH, HJXZ, XZXZ, XB, GZDW, ZY, CPH_ontology FROM FKD_BJR LIMIT ?', [queryLimit])
         
         // 在应用层过滤掉已有的实体
         const filteredResult = existingBhList.length > 0 
@@ -2137,8 +2139,9 @@ app.post('/api/v1/tags/:tagCode/batch-test', async (req, res) => {
         )
         existingJjdList = existingKeys.map(r => r.ENTITY_KEY).filter(Boolean)
         
-        // 查询警情实体
-        const result = await db.query('SELECT JJDBH, BJNR, BJSJ FROM JJD_JJD LIMIT ?', [countNum * 2])
+        // 查询警情实体 - 查询足够多的记录以确保能找到未测试过的实体
+        const queryLimit = Math.max(countNum * 2, existingJjdList.length + countNum)
+        const result = await db.query('SELECT JJDBH, BJNR, BJSJ FROM JJD_JJD LIMIT ?', [queryLimit])
         
         // 在应用层过滤掉已有的实体
         const filteredResult = existingJjdList.length > 0
@@ -2427,6 +2430,7 @@ ${entity.plateNumber || '-'}`
           totalCount: entities.length,
           hitCount: hitCount,
           addedCount: examplesAdded.length,
+          accuracy: entities.length > 0 ? Math.round((hitCount / entities.length) * 100) : 0,
           examples: examplesAdded,
           message: `批量测试完成，共处理 ${entities.length} 个实体，命中 ${hitCount} 个，已添加 ${examplesAdded.length} 条示例`
         }
