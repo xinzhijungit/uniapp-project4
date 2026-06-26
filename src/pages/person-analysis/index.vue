@@ -6,70 +6,93 @@
       <SideMenu />
       
       <view class="main-content">
-        <view class="page-header">
-          <text class="page-title">人联研判</text>
-          <view class="header-actions">
-            <view class="action-btn" @click="handleRefresh">
-              <text class="action-icon">🔄</text>
-            </view>
-            <view class="action-btn" @click="handleRegenerateGraph">
-              <text class="action-icon">🔄</text>
-              <text class="action-text">重置图谱</text>
-            </view>
-          </view>
+        <!-- 统计分析页面 -->
+        <view v-if="currentView === 'statistics'" class="iframe-container">
+          <iframe 
+            class="content-iframe"
+            src="https://aichat.jointpilot.com/front/?tenantName=%E4%B8%8A%E6%B5%B7%E5%B8%82%E5%A7%94%E5%85%9A%E6%A0%A1#/dashboard/manage?uniqKey=1807"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
         </view>
         
-        <view class="page-body">
-          <view class="main-area">
-            <view class="results-section" v-if="hasSearchResult">
-              <RiskAnalysisCard 
-                :analysisText="analysisResult.analysisText || '暂无分析数据'"
-                :features="analysisResult.features"
-                :suggestions="analysisResult.suggestions"
-                :tags="analysisResult.tags || []"
-              />
-              
-              <PersonInfoCard 
-                :person="analysisResult.personInfo"
-                :riskScore="analysisResult.riskScore"
-                :riskTags="analysisResult.riskTags"
-              />
-              
-              <CaseRecordsCard 
-                :caseRecords="analysisResult.caseRecords"
-              />
-              
-              <HouseholdCard 
-                :householdInfo="analysisResult.householdInfo"
-                :householdMembers="analysisResult.householdMembers"
-                :personCriminalRecords="analysisResult.personCriminalRecords"
-                :householdCriminalRecords="analysisResult.householdCriminalRecords"
-              />
-              
-              <!-- 预警等级为后台判断逻辑，不对外展示 -->
-              
-              <SuggestionCard 
-                :suggestions="analysisResult.suggestions"
-              />
-              
-              <KnowledgeGraph 
-                :nodes="analysisResult.graphData.nodes"
-                :links="analysisResult.graphData.links"
-                @node-click="handleNodeClick"
-              />
-            </view>
-            
-            <view class="empty-section" v-else>
-              <view class="empty-icon">🔍</view>
-              <text class="empty-title">请进行检索</text>
-              <text class="empty-desc">输入身份证号、车牌号、案件编号或手机号进行人员研判分析</text>
+        <!-- 智能问答页面 -->
+        <view v-else-if="currentView === 'qa'" class="iframe-container">
+          <iframe 
+            class="content-iframe"
+            src="https://aichat.jointpilot.com/front/?tenantName=%E4%B8%8A%E6%B5%B7%E5%B8%82%E5%A7%94%E5%85%9A%E6%A0%A1#/index"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </view>
+        
+        <!-- 默认：人联研判页面 -->
+        <template v-else>
+          <view class="page-header">
+            <text class="page-title">人联研判</text>
+            <view class="header-actions">
+              <view class="action-btn" @click="handleRefresh">
+                <text class="action-icon">🔄</text>
+              </view>
+              <view class="action-btn" @click="handleRegenerateGraph">
+                <text class="action-icon">🔄</text>
+                <text class="action-text">重置图谱</text>
+              </view>
             </view>
           </view>
           
-          <view class="side-panel">
-            <SearchPanel @search="handleSearch" />
+          <view class="page-body">
+            <view class="main-area">
+              <view class="results-section" v-if="hasSearchResult">
+                <RiskAnalysisCard 
+                  :analysisText="analysisResult.analysisText || '暂无分析数据'"
+                  :features="analysisResult.features"
+                  :suggestions="analysisResult.suggestions"
+                  :tags="analysisResult.tags || []"
+                />
+                
+                <PersonInfoCard 
+                  :person="analysisResult.personInfo"
+                  :riskScore="analysisResult.riskScore"
+                  :riskTags="analysisResult.riskTags"
+                />
+                
+                <CaseRecordsCard 
+                  :caseRecords="analysisResult.caseRecords"
+                />
+                
+                <HouseholdCard 
+                  :householdInfo="analysisResult.householdInfo"
+                  :householdMembers="analysisResult.householdMembers"
+                  :personCriminalRecords="analysisResult.personCriminalRecords"
+                  :householdCriminalRecords="analysisResult.householdCriminalRecords"
+                />
+                
+                <!-- 预警等级为后台判断逻辑，不对外展示 -->
+                
+                <SuggestionCard 
+                  :suggestions="analysisResult.suggestions"
+                />
+                
+                <KnowledgeGraph 
+                  :nodes="analysisResult.graphData.nodes"
+                  :links="analysisResult.graphData.links"
+                  @node-click="handleNodeClick"
+                />
+              </view>
+              
+              <view class="empty-section" v-else>
+                <view class="empty-icon">🔍</view>
+                <text class="empty-title">请进行检索</text>
+                <text class="empty-desc">输入身份证号、车牌号、案件编号或手机号进行人员研判分析</text>
+              </view>
+            </view>
+            
+            <view class="side-panel">
+              <SearchPanel @search="handleSearch" />
+            </view>
           </view>
-        </view>
+        </template>
       </view>
     </view>
   </view>
@@ -88,6 +111,13 @@ import HouseholdCard from '@/components/HouseholdCard.vue'
 // WarningLevelCard 已移除，预警等级为后台判断逻辑，不对外展示
 import SuggestionCard from '@/components/SuggestionCard.vue'
 import { searchEntity, regenerateGraph, type AnalysisResult } from '@/api/personAnalysis'
+
+const currentView = ref('')
+
+const urlParams = new URLSearchParams(window.location.search)
+if (urlParams.get('view')) {
+  currentView.value = urlParams.get('view') || ''
+}
 
 const analysisResult = ref<AnalysisResult>({
   personInfo: null,
@@ -181,6 +211,26 @@ function handleNodeClick(node: any) {
   flex: 1;
   background: #F5F7FA;
   overflow-y: auto;
+}
+
+.iframe-container {
+  height: calc(100vh - 60px);
+  background: #FFFFFF;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.content-iframe {
+  width: 100%;
+  height: calc(100% + 60px);
+  border: none;
+  margin-top: -60px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .page-header {

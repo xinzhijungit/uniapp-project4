@@ -16,6 +16,14 @@
       "dest": "/api/index.js"
     },
     {
+      "src": "/pages/statistics/index",
+      "dest": "/dist/build/h5/pages/statistics/index.html"
+    },
+    {
+      "src": "/pages/qa/index",
+      "dest": "/dist/build/h5/pages/qa/index.html"
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/dist/build/h5/assets/$1"
     },

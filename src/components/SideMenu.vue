@@ -143,9 +143,9 @@ const handleSubMenuClick = (sub: { id: string; name: string; children?: any[] })
   } else if (sub.id === 'intelligent-tags') {
     uni.navigateTo({ url: '/pages/intelligent-tags/index' })
   } else if (sub.id === 'statistical-analysis') {
-    window.open('https://aichat.jointpilot.com/front/?tenantName=%E4%B8%8A%E6%B5%B7%E5%B8%82%E5%A7%94%E5%85%9A%E6%A0%A1#/dashboard/manage?uniqKey=1807', '_blank')
+    uni.navigateTo({ url: '/pages/person-analysis/index?view=statistics' })
   } else if (sub.id === 'intelligent-qa') {
-    window.open('https://aichat.jointpilot.com/front/?tenantName=%E4%B8%8A%E6%B5%B7%E5%B8%82%E5%A7%94%E5%85%9A%E6%A0%A1#/index', '_blank')
+    uni.navigateTo({ url: '/pages/person-analysis/index?view=qa' })
   }
 }
 
