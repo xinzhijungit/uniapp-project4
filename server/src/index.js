@@ -16,10 +16,6 @@ app.use(cors({
 app.use(express.json())
 
 function logSQL(sql, params) {
-  // 直接使用 JSON.stringify 输出 params，因为 params 中的元素已经是序列化后的值
-  const logMessage = `[${new Date().toISOString()}] SQL: ${sql} | Params: ${JSON.stringify(params)}\n`
-  fs.appendFileSync('/Users/xiaoping/Desktop/智慧西安开发/uniapp-project/server/server.log', logMessage)
-  // 打印每个参数的详细信息
   console.log('SQL执行:', sql)
   console.log('Params详情:', params.map((p, i) => `param[${i}]=${JSON.stringify(p)}`).join(', '))
 }
@@ -4144,11 +4140,18 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(h5DistPath, 'index.html'))
 })
 
-// 启动服务器
-app.listen(PORT, async () => {
-  console.log(`服务器已启动，端口: ${PORT}`)
-  console.log(`API地址: http://localhost:${PORT}/api/v1`)
-  
-  // 初始化配置表
+// 初始化配置表（供外部调用）
+async function initConfig() {
   await initConfigTable()
-})
+}
+
+// 条件启动：直接运行时启动服务器，被 require 时只导出 app
+if (require.main === module) {
+  app.listen(PORT, async () => {
+    console.log(`服务器已启动，端口: ${PORT}`)
+    console.log(`API地址: http://localhost:${PORT}/api/v1`)
+    await initConfigTable()
+  })
+}
+
+module.exports = { app, initConfig }
