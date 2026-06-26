@@ -143,9 +143,9 @@ const handleSubMenuClick = (sub: { id: string; name: string; children?: any[] })
   } else if (sub.id === 'intelligent-tags') {
     uni.navigateTo({ url: '/pages/intelligent-tags/index' })
   } else if (sub.id === 'statistical-analysis') {
-    uni.navigateTo({ url: '/pages/person-analysis/index?view=statistics' })
+    uni.navigateTo({ url: '/pages/statistics/index' })
   } else if (sub.id === 'intelligent-qa') {
-    uni.navigateTo({ url: '/pages/person-analysis/index?view=qa' })
+    uni.navigateTo({ url: '/pages/qa/index' })
   }
 }
 
