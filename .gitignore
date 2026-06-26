@@ -2,8 +2,8 @@
 node_modules/
 server/node_modules/
 
-# Build outputs
-dist/
+# Build outputs (保留H5构建产物用于Vercel部署)
+dist/build/mp-weixin/
 build/
 
 # Environment variables
@@ -34,4 +34,3 @@ coverage/
 
 # Misc
 .unpackage/
-node_modules
