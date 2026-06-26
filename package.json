@@ -7,7 +7,7 @@
     "build:h5": "uni build",
     "dev:mp-weixin": "uni -p mp-weixin",
     "build:mp-weixin": "uni build -p mp-weixin",
-    "vercel-build": "echo 'Build completed'"
+    "vercel-build": "npm run build:h5 && cp -r dist/build/h5/. public/"
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-4020420240722001",
