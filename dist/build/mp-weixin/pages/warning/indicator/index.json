@@ -1,7 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "navigationBarTitleText": "预警指标",
-  "usingComponents": {
-    "top-nav": "../../../components/TopNav"
-  }
-}

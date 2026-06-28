@@ -1,1 +1,0 @@
-import{t as r}from"./request.C0qULkTy.slNnRtyp.js";async function n(n){return r("/search/entity",n)}async function e(n){return r("/graph/query",n)}async function t(){return r("/graph/regenerate",{})}export{e,n,t};
