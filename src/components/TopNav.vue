@@ -2,7 +2,7 @@
   <view class="top-nav">
     <view class="logo-section">
       <view class="logo-icon">
-        <text class="logo-text">DEMO</text>
+        <text class="logo-text">智慧公安AI智能体</text>
       </view>
     </view>
     
@@ -82,19 +82,21 @@ const handleSearch = () => {
 }
 
 .logo-icon {
-  width: 40px;
+  min-width: 160px;
   height: 40px;
   background: #FFFFFF;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 12px;
 }
 
 .logo-text {
   font-size: 14px;
   font-weight: bold;
   color: #0F40F5;
+  white-space: nowrap;
 }
 
 .nav-menu {
